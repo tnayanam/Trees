@@ -1,0 +1,296 @@
+#include <iostream>
+
+using namespace std;
+
+class BST
+{
+	struct Node
+	{
+		Node *left;
+		Node *right;
+		int data;
+	}*root;
+
+	void insertNode(Node *root, Node *temp);
+	void postOrder(Node *root);
+	void preOrder(Node *root);
+	void inOrder(Node *root);
+	bool search(Node *root, int num);
+	int min(Node *root);
+	int max(Node *root);
+	int height(Node *root);
+	Node * del(Node *root, int num);
+	int findMinData(Node *);
+public:
+	BST();
+	void insert(int);
+	void postOrder();
+	void preOrder();
+	void inOrder();
+	bool search(int);
+	int min();
+	int max();
+	int height();
+	int maxHeight(int n1, int n2);
+	void del(int num);
+
+};
+
+int BST::findMinData(Node *root)
+{ 
+	if (root->left == NULL)
+	{
+		return root->data;
+	}
+	findMinData(root->left);
+}
+void BST::del(int num)
+{
+	del(root,num);
+}
+
+
+BST::Node * BST::del(Node *root, int num)
+{
+	if (root == NULL)
+		return root;
+	if (num > root->data)
+		root->right = del(root->right, num);
+	else if (num < root->data)
+		root->left = del(root->left, num);
+	else 
+	{
+		if (root->left == NULL && root->right == NULL)
+		{
+			delete root;
+			return NULL;
+		}
+		else if (root->right == NULL)
+		{
+			Node *tmp = root->left;
+			delete root;
+			return tmp;
+		}
+		else if (root->left == NULL)
+		{
+			Node *tmp = root->right;
+			delete root;
+			return tmp;
+		}
+		else
+		{
+			root->data = findMinData(root->right);
+			root->right = del(root->right, root->data);
+		}
+	}
+	return root;
+}
+
+int BST::height()
+{
+	return height(root);
+}
+
+int BST::height(Node *root)
+{
+	if (root == NULL)
+		return -1;
+	return maxHeight (height(root->left), height(root->right)) + 1;
+}
+
+int BST::maxHeight(int n1, int n2)
+{
+	return n1 > n2 ? n1 : n2;
+}
+
+int BST::max()
+{
+	return max(root);
+}
+
+int BST::max(Node * root)
+{
+	if (root == NULL)
+		return 0;
+	if (root->right == NULL)
+		return root->data;
+	return max(root->right);
+}
+
+int BST::min()
+{
+	return min(root);
+}
+
+int BST::min(Node *root)
+{
+	if (root == NULL)
+		return 0;
+	if (root->left == NULL)
+		return root->data;
+	return min(root->left); // since I want the value to be returned all the way through out of the stack I need to add a return statemn
+	//to the recurion call
+}
+
+BST::BST()
+{
+	root = NULL  ;
+}
+
+bool BST::search(int num)
+{
+	return search(root, num);
+}
+
+bool BST::search(Node *root, int num)
+{
+	if (root->data == num)
+		return true;
+	if (num < root->data)
+		if(root->left!=NULL)
+		search(root->left, num);
+	else
+		if(root->right!=NULL)
+		search(root->right, num);
+	return false;
+}
+
+void BST::insert(int num)
+{
+	Node *temp = new Node;
+	temp->data = num;
+	temp->right = NULL;
+	temp->left = NULL;
+	if(root == NULL)
+		root = temp;
+	else
+	insertNode(root, temp);
+}
+
+void BST::insertNode(Node *root, Node *temp)
+{
+	if (temp->data > root->data)
+		if (root->right != NULL)
+			insertNode(root->right, temp);
+		else
+			root->right = temp;
+
+	else
+		if (root->left != NULL)
+			insertNode(root->left, temp);
+		else
+		root->left = temp;
+}
+
+void BST::postOrder()
+{
+	postOrder(root);
+}
+
+void BST::postOrder(Node *root)
+{
+	if (root == NULL)
+		return;
+	postOrder(root->left);
+	postOrder(root->right);
+	cout << root->data << " ";
+}
+
+void BST::preOrder()
+{
+	preOrder(root);
+}
+
+void BST::preOrder(Node *root)
+{
+	if (root == NULL)
+		return;
+	cout << root->data << " ";
+	preOrder(root->left);
+	preOrder(root->right);
+}
+
+void BST::inOrder()
+{
+	inOrder(root);
+}
+
+void BST::inOrder(Node *root)
+{
+	if (root == NULL)
+		return;
+	inOrder(root->left);
+	cout << root->data << " ";
+	inOrder(root->right);
+}
+
+int main()
+{
+	BST b1;
+	bool operate = true;
+	int num, ch;
+	while (operate) 
+	{
+		cout << "\n1.Create";
+		cout << " 2. Postorder";
+		cout << " 3. Preorder";
+		cout << " 4. Inorder";
+		cout << " 5. Search";
+		cout << " 6. Min";
+		cout << " 7. Max";
+		cout << " 8. Height";
+		cout << " 9. Delete";
+		cout << " 10. Exit";
+		cin >> ch;
+		switch (ch)
+		{
+		case 1:
+			cout << "Enter the element\n";
+			cin >> num;
+			b1.insert(num);
+			break;
+		case 2:
+			cout << "\nPost Order Traversal\n";
+			b1.postOrder();
+			break;
+		case 3:
+			cout << "\nPre Order Traversal\n";
+			b1.preOrder();
+			break;
+		case 4:
+			cout << "\nIn Order Traversal\n";
+			b1.inOrder();
+			break;
+		case 5:
+			cout << "\nEnter the number to be searched\n";
+			cin >> num;
+			b1.search(num) ? cout << "Number Found!" : cout << "Number not found";
+			break;
+		case 6:
+			cout << "\nMinimum Element\n";
+			cout << b1.min();
+			break;
+		case 7:
+			cout << "\nMaximum Element\n";
+			cout << b1.max();
+			break;
+		case 8:
+			cout << "\nHeight of Tree\n";
+			cout << b1.height();
+			break;
+		case 9:
+			cout << "\nEnter the number to delete\n";
+			cin >> num;
+		    b1.del(num);
+			break;
+		default:
+			exit(0);
+		}
+	}
+}
+
+
+
+
+
+
