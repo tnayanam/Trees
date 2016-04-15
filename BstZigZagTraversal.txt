@@ -1,0 +1,126 @@
+// Zig Zag Traversal
+
+#include <iostream>
+#include <queue>
+#include <stack>
+
+using namespace std;
+
+class Bst
+{
+	struct Node
+	{
+		Node *right;
+		Node *left;
+		int data;
+	}*root;
+
+	Node * insert(Node *root, Node *temp);
+	void inorder(Node *root);
+	void zigZagTraversal(Node *root);
+
+public:
+	void insert(int num);
+	void zigZagTraversal();
+	void inorder();
+	Bst();
+};
+
+void Bst::zigZagTraversal()
+{
+	zigZagTraversal(root);
+}
+
+void Bst::zigZagTraversal(Node *root)
+{
+	stack<Node *> s1;
+	stack<Node *> s2;
+	if (root == NULL)
+		return;
+	s1.push(root);
+	while (!s1.empty() || !s2.empty())
+	{
+		while (!s1.empty())
+		{
+			Node *curr = s1.top();
+			if (curr->left != NULL)
+				s2.push(curr->left); // left right
+			if (curr->right != NULL)
+				s2.push(curr->right);
+			cout << s1.top()->data << " ";
+			s1.pop();
+		}
+		while (!s2.empty())
+		{
+			Node *curr = s2.top();
+			if (curr->right != NULL)
+				s1.push(curr->right); // right left 
+			if (curr->left != NULL)
+				s1.push(curr->left);
+			cout << s2.top()->data << " ";
+			s2.pop();
+		}
+	}
+}
+
+Bst::Bst()
+{
+	root = NULL;
+}
+
+void Bst::insert(int num)
+{
+	Node *temp = new Node;
+	temp->data = num;
+	temp->right = NULL;
+	temp->left = NULL;
+	if (root == NULL)
+		root = temp;
+	else
+		insert(root, temp);
+}
+
+Bst::Node * Bst::insert(Node *root, Node *temp)
+{
+	if (root == NULL)
+		return temp;
+	if (temp->data > root->data)
+		root->right = insert(root->right, temp);
+	if (temp->data <= root->data)
+		root->left = insert(root->left, temp);
+	return root;
+}
+
+void Bst::inorder()
+{
+	inorder(root);
+}
+
+void Bst::inorder(Node *root)
+{
+	if (root == NULL)
+		return;
+	inorder(root->left);
+	cout << root->data << " ";
+	inorder(root->right);
+}
+
+int main()
+{
+	Bst b1;
+	b1.insert(15);
+	b1.insert(20);
+	b1.insert(10);
+	b1.insert(4);
+	b1.insert(13);
+	b1.insert(25);
+	b1.insert(12);
+	b1.insert(14);
+	b1.insert(23);
+	b1.insert(30);
+	b1.inorder();
+	cout << endl;
+	b1.zigZagTraversal();
+}
+
+
