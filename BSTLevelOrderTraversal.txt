@@ -1,0 +1,109 @@
+// Level Order Traversal
+
+#include <iostream>
+#include <queue>
+
+using namespace std;
+
+class Bst
+{
+	struct Node
+	{
+		Node *right;
+		Node *left;
+		int data;
+	}*root;
+
+	Node * insert(Node *root, Node *temp);
+	void inorder(Node *root);
+	void levelOrder(Node *root);
+
+public:
+	void insert(int num);
+	void levelOrder();
+	void inorder();
+	Bst();
+};
+
+void Bst::levelOrder()
+{
+	levelOrder(root);
+}
+
+void Bst::levelOrder(Node *root)
+{
+	queue<Node *> q;
+	if (root == NULL)
+		return;
+	q.push(root);
+	while (!q.empty())
+	{
+		Node *root = q.front();
+		if (root->right != NULL)
+			q.push(root->right);
+		if (root->left != NULL)
+			q.push(root->left);
+		cout << q.front()->data << " ";
+		q.pop();
+	}
+}
+
+Bst::Bst()
+{
+	root = NULL;
+}
+
+void Bst::insert(int num)
+{
+	Node *temp = new Node;
+	temp->data = num;
+	temp->right = NULL;
+	temp->left = NULL;
+	if (root == NULL)
+		root = temp;
+	else
+		insert(root, temp);
+}
+
+Bst::Node * Bst::insert(Node *root, Node *temp)
+{
+	if (root == NULL)
+		return temp;
+	if (temp->data > root->data)
+		root->right = insert(root->right, temp);
+	if (temp->data <= root->data)
+		root->left = insert(root->left, temp);
+	return root;
+}
+
+void Bst::inorder()
+{
+	inorder(root);
+}
+
+void Bst::inorder(Node *root)
+{
+	if (root == NULL)
+		return;
+	inorder(root->left);
+	cout << root->data << " ";
+	inorder(root->right);
+}
+
+int main()
+{
+	Bst b1;
+	b1.insert(15);
+	b1.insert(20);
+	b1.insert(10);
+	b1.insert(4);
+	b1.insert(13);
+	b1.insert(25);
+	b1.insert(12);
+	b1.insert(14);
+	b1.insert(23);
+	b1.insert(30);
+	b1.inorder();
+	cout << endl;
+	b1.levelOrder();
+}
