@@ -1,0 +1,130 @@
+// binary tree in balanced or not
+#include <iostream>
+
+using namespace std;
+
+class BST
+{
+	struct Node
+	{
+		int data;
+		Node *right;
+		Node *left;
+	}*root;
+	Node * insert(Node *root, Node *tmp);
+	void inorder(Node *root);
+	bool isBalanced(Node *root);
+	int height(Node *root);
+	int max(int n1, int n2);
+public:
+	BST();
+	void insert(int num);
+	void inorder();
+	bool isBalanced();
+};
+
+bool BST::isBalanced()
+{
+	return isBalanced(root);
+}
+
+int BST::height(Node *root)
+{
+	if (root == NULL)
+		return -1;
+	else
+		return (max(height(root->left), height(root->right)) + 1 );
+}
+
+int BST::max(int n1, int n2)
+{
+	return n1 > n2 ? n1 : n2;
+}
+
+bool BST::isBalanced(Node *root)
+{
+	if (root == NULL)
+		return true;
+	cout << height(root->right) << "  ";
+	cout << height(root->left);
+	if (height(root->left) - height(root->right) > 1 || height(root->left) - height(root->right) < -1)
+		return false;
+
+	return isBalanced(root->left) && isBalanced(root->right);
+}
+
+void BST::inorder()
+{
+	inorder(root);
+}
+
+void BST::inorder(Node *root)
+{
+	if (root == NULL)
+		return;
+	inorder(root->left);
+	cout << root->data << " ";
+	inorder(root->right);
+}
+
+BST::BST()
+{
+	root = NULL;
+}
+
+BST::Node * BST::insert(Node *root, Node  *tmp)
+{
+	if (root == NULL)
+		return tmp;
+	if (tmp->data > root->data)
+		root->right = insert(root->right, tmp);
+	else
+		root->left = insert(root->left, tmp);
+	return root;
+}
+
+void BST::insert(int num)
+{
+	Node *tmp = new Node;
+	tmp->data = num;
+	tmp->right = NULL;
+	tmp->left = NULL;
+	if (root == NULL)
+		root = tmp;
+	else
+		insert(root, tmp);
+}
+
+int main()
+{
+	BST b1;
+	bool operate = true;
+	int ch = 1, num;
+	while (ch)
+	{
+		cout << "\n1. Insert\n";
+		cout << "2. InOrder\n";
+		cout << "3. InOrder\n";
+		cout << "4. Exit\n";
+		cout << "Enter the choice\n";
+		cin >> ch;
+		switch (ch)
+		{
+			case 1:
+				cout << "Enter the element\n";
+				cin >> num;
+				b1.insert(num);
+				break;
+			case 2:
+				b1.inorder();
+				break;
+			case 3:
+				b1.isBalanced() ? cout << "It's balanced\n" : cout << "Not Balanced\n";
+				break;
+			case 4:
+				exit(0);
+			default:
+				operate = false;
+		}
+	}
+}
