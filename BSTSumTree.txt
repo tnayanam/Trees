@@ -1,0 +1,104 @@
+// find sum tree
+
+#include <iostream>
+#include <queue>
+#include <stack>
+
+using namespace std;
+
+class Bst
+{
+	struct Node
+	{
+		Node *right;
+		Node *left;
+		int data;
+	}*root;
+	Node * insert(Node *root, Node *temp);
+	void inorder(Node *root);
+	int sumTree(Node *root);
+public:
+	void insert(int num);
+	void inorder();
+	void sumTree();
+	Bst();
+};
+
+void Bst::sumTree()
+{
+	sumTree(root);
+}
+
+int Bst::sumTree(Node *root)
+{
+	if (root == NULL)
+		return 0;
+	int old_val = root->data;
+	root->data = sumTree(root->right) + sumTree(root->left);
+	return old_val + root->data;
+}
+
+Bst::Bst()
+{
+	root = NULL;
+}
+
+void Bst::insert(int num)
+{
+	Node *temp = new Node;
+	temp->data = num;
+	temp->right = NULL;
+	temp->left = NULL;
+	if (root == NULL)
+		root = temp;
+	else
+		insert(root, temp);
+}
+
+Bst::Node * Bst::insert(Node *root, Node *temp)
+{
+	if (root == NULL)
+		return temp;
+	if (temp->data > root->data)
+		root->right = insert(root->right, temp);
+	if (temp->data <= root->data)
+		root->left = insert(root->left, temp);
+	return root;
+}
+
+void Bst::inorder()
+{
+	inorder(root);
+}
+
+void Bst::inorder(Node *root)
+{
+	if (root == NULL)
+		return;
+	inorder(root->left);
+	cout << root->data << " ";
+	inorder(root->right);
+}
+
+int main()
+{
+	Bst b1;
+	int num1;
+	int num2;
+	b1.insert(8);
+	b1.insert(15);
+	b1.insert(5);
+	b1.insert(3);
+	b1.insert(6);
+	b1.insert(7);
+	b1.insert(18);
+	b1.insert(21);
+	b1.insert(19);
+	b1.insert(22);
+	b1.inorder();
+	b1.sumTree();
+	cout << endl;
+	b1.inorder();
+}
+
+
