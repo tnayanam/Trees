@@ -1,0 +1,80 @@
+// Print Last K Nodes of Binary Search Tree
+#include <iostream>
+
+using namespace std;
+
+class Bst
+{
+	struct Node
+	{
+		Node * right;
+		Node *left;
+		int data;
+	}*root;
+	void lastKthElement(Node *root, int &k);
+	Node * insert(Node *root, Node *temp);
+public:
+	Bst();
+	void insert(int num);
+	void lastKthElement(int k);
+};
+
+void Bst::lastKthElement(int k)
+{
+	lastKthElement(root, k);
+}
+
+void Bst::lastKthElement(Node *root, int &k) // since we are not returning anything here we need to access the same address of k
+{
+	if (root == NULL)
+		return;
+	if (k == 0)
+		return;
+	lastKthElement(root->right,k);
+	cout << root->data << " ";
+	k--;
+	lastKthElement(root->left,k);
+	
+}
+
+Bst::Bst()
+{
+	root = NULL;
+}
+
+void Bst::insert(int num)
+{
+	Node *temp = new Node;
+	temp->data = num;
+	temp->right = NULL;
+	temp->left = NULL;
+	if (root == NULL)
+		root = temp; 
+	else
+		insert(root, temp);
+}
+
+Bst::Node * Bst::insert(Node *root, Node *temp)
+{
+	if (root == NULL)
+		return temp;
+	if (temp->data > root->data)
+		root->right = insert(root->right, temp);
+	else
+		root->left = insert(root->left, temp);
+	return root;
+
+}
+
+int main()
+{
+	Bst b1;
+	b1.insert(10);
+	b1.insert(16);
+	b1.insert(12);
+	b1.insert(18);
+	b1.insert(6);
+	b1.insert(4);
+	b1.insert(8);
+	b1.lastKthElement(4);
+}
