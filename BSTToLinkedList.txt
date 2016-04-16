@@ -1,0 +1,133 @@
+// BST to LinkList
+
+#include <iostream>
+
+#include <queue>
+#include <stack>
+
+using namespace std;
+
+class Bst
+{
+	struct BstNode
+	{
+		BstNode *right;
+		BstNode *left;
+		int data;
+	}*root;
+
+	struct Node
+	{
+		Node *next;
+		int data;
+	}*head;
+
+	BstNode * insert(BstNode *root, BstNode *temp);
+	void inorder(BstNode *root);
+	void printLL(Node *root);
+public:
+	void insert(int num);
+	void inorder();
+	void insertInLL(int data);
+	void printLL();
+	Bst();
+};
+
+void Bst::printLL()
+{
+	printLL(head);
+}
+
+void Bst::printLL(Node *head)
+{
+	cout << endl;
+	Node *temp = head;
+	while (temp != NULL)
+	{
+		cout << temp->data << " ";
+		temp = temp->next;
+	}
+}
+
+void Bst::insertInLL(int data)
+{
+	Node *temp = new Node;
+	temp->data = data;
+	temp->next = NULL;
+	if (head == NULL)
+		head = temp;
+	else
+	{
+		Node *tmp = head;
+		while (tmp->next != NULL)
+		{
+			tmp = tmp->next;
+		}
+		tmp->next = temp;
+	}
+}
+
+Bst::Bst()
+{
+	root = NULL;
+	head = NULL;
+}
+
+void Bst::insert(int num)
+{
+	BstNode *temp = new BstNode;
+	temp->data = num;
+	temp->right = NULL;
+	temp->left = NULL;
+	if (root == NULL)
+		root = temp;
+	else
+		insert(root, temp);
+}
+
+Bst::BstNode * Bst::insert(BstNode *root, BstNode *temp)
+{
+	if (root == NULL)
+		return temp;
+	if (temp->data > root->data)
+		root->right = insert(root->right, temp);
+	if (temp->data <= root->data)
+		root->left = insert(root->left, temp);
+	return root;
+}
+
+void Bst::inorder()
+{
+	inorder(root);
+}
+
+void Bst::inorder(BstNode *root)
+{
+	if (root == NULL)
+		return;
+	inorder(root->left);
+	insertInLL(root->data);
+	inorder(root->right);
+}
+
+int main()
+{
+	Bst b1;
+	int num1;
+	int num2;
+	b1.insert(8);
+	b1.insert(15);
+	b1.insert(5);
+	b1.insert(3);
+	b1.insert(6);
+	b1.insert(7);
+	b1.insert(18);
+	b1.insert(21);
+	b1.insert(19);
+	b1.insert(22);
+	b1.inorder();
+	cout << endl;
+	b1.printLL();
+}
+
+
