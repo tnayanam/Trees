@@ -1,0 +1,108 @@
+// Print all nodes in a range
+
+#include <iostream>
+#include <queue>
+#include <stack>
+
+using namespace std;
+
+class Bst
+{
+	struct Node
+	{
+		Node *right;
+		Node *left;
+		int data;
+	}*root;
+
+	Node * insert(Node *root, Node *temp);
+	void inorder(Node *root);
+	Node *find(Node *, int);
+public:
+	void insert(int num);
+	void inorder();
+	void find(int num);
+	Bst();
+};
+
+Bst::Node * Bst::find(Node *root, int num)
+{
+	if (root == NULL)
+		return NULL;
+	cout << root->data << " ";
+	if (root->data == num)
+		return root;
+	Node *found = find(root-> right, num);
+	if(found == NULL)
+		found = find(root->left, num);
+	return found;
+
+}
+
+void Bst::find(int num)
+{
+	cout << endl;
+	cout<< "the data is:" << find(root, num)->data;
+}
+
+Bst::Bst()
+{
+	root = NULL;
+}
+
+void Bst::insert(int num)
+{
+	Node *temp = new Node;
+	temp->data = num;
+	temp->right = NULL;
+	temp->left = NULL;
+	if (root == NULL)
+		root = temp;
+	else
+		insert(root, temp);
+}
+
+Bst::Node * Bst::insert(Node *root, Node *temp)
+{
+	if (root == NULL)
+		return temp;
+	if (temp->data > root->data)
+		root->right = insert(root->right, temp);
+	if (temp->data <= root->data)
+		root->left = insert(root->left, temp);
+	return root;
+}
+
+void Bst::inorder()
+{
+	inorder(root);
+}
+
+void Bst::inorder(Node *root)
+{
+	if (root == NULL)
+		return;
+	inorder(root->left);
+	cout << root->data << " ";
+	inorder(root->right);
+}
+
+int main()
+{
+	Bst b1;
+	int num1;
+	int num2;
+	b1.insert(15);
+	b1.insert(20);
+	b1.insert(10);
+	b1.insert(4);
+	b1.insert(13);
+	b1.insert(25);
+	b1.insert(12);
+	b1.insert(14);
+	b1.insert(23);
+	b1.insert(30);
+	cout << endl;
+	b1.find(13);
+
+}
